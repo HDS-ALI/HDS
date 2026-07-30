@@ -557,29 +557,11 @@ $("btnExportar").onclick = async () => {
   const nombre = `HDS_${hoy()}_${pendientes.length}.json`;
 
   const arch = new File([texto], nombre, {type:"application/json"});
-  let compartido = false, motivo = "";
-  if(!window.isSecureContext){
-    motivo = "la app se abrió desde un archivo, no desde su dirección de internet";
-  } else if(!(navigator.canShare && navigator.canShare({files:[arch]}))){
-    motivo = "este navegador no permite compartir archivos";
-  } else {
-    try{
-      await navigator.share({files:[arch], title:"Hojas de servicio para la PC"});
-      compartido = true;
-    }catch(e){
-      motivo = (e && e.name === "AbortError") ? "cancelaste el compartir"
-                                              : "el compartir no funcionó";
-    }
+  let compartido = false;
+  if(navigator.canShare && navigator.canShare({files:[arch]})){
+    try{ await navigator.share({files:[arch], title:"Hojas de servicio para la PC"}); compartido = true; }catch(e){}
   }
-  if(!compartido){
-    descargar(nombre, texto);
-    alert("No se abrió el menú de compartir (" + motivo + ").\n\n" +
-          "El archivo se descargó en la carpeta Descargas del teléfono:\n\n" +
-          nombre + "\n\n" +
-          "Muévelo a la carpeta entradas/ de tu PC.");
-  } else {
-    alert("Listo: se compartió " + nombre);
-  }
+  if(!compartido) descargar(nombre, texto);
 
   if(confirm(`¿Marcar esas ${pendientes.length} hojas como enviadas?`)){
     pendientes.forEach(v => v.exportado = true);
