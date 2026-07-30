@@ -1,7 +1,7 @@
 // Hace que la app siga funcionando sin señal una vez que se cargó la
 // primera vez. Guarda una copia en el teléfono y la sirve de ahí.
 
-const CACHE = "vales-v1";
+const CACHE = "hds-v4";
 const ARCHIVOS = [
   "./",
   "./index.html",
